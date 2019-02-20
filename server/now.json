@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "name": "koa-mysql-todo-list",
+  "alias": "koa-mysql-todo-list.now.sh",
+  "env": {
+    "DBHOST": "your_aws_endpoint",
+    "DBPORT": "3306",
+    "DBUSER": "your_username",
+    "DBPASSWORD": "your_password",
+    "DBNAME": "todoDB"
+  },
+  "builds": [{ "src": "api/*/index.js", "use": "@now/node" }],
+  "routes": [
+    { "src": "/api/post", "methods": ["POST"], "dest": "/api/post/index.js" },
+    { "src": "/api/get", "methods": ["GET"], "dest": "/api/get/index.js" },
+    { "src": "/api/update", "methods": ["PUT"], "dest": "/api/update/index.js" },
+    { "src": "/api/delete", "methods": ["POST"], "dest": "/api/delete/index.js" },
+    { "src": "/", "status": 404},
+    { "src": "/api", "status": 404}
+  ]
+}

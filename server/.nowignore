@@ -1,0 +1,8 @@
+.git
+.gitignore
+node_modules
+package-lock.json
+README.md
+post.json
+update.json
+delete.json
