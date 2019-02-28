@@ -8,15 +8,15 @@ app.use(bodyParser())
 
 app.use(async ctx => {
   const postBody = await ctx.request.body
-  const postItem = await postTodo(postBody.todoItem, postBody.todoDateAdded, postBody.todoStatus)
+  const postItem = await postTodo(postBody)
   ctx.body = `New todo created with todoID ${postItem[0].insertId}`
 })
 
-async function postTodo(todoItem, todoDateAdded, todoStatus) {
+async function postTodo(postBody) {
   try {
     const postedTodo = await pool.query(`
-    INSERT INTO todo (todoItem, todoDateAdded, todoStatus) 
-    VALUES ("${todoItem}", "${todoDateAdded}", "${todoStatus}");
+    INSERT INTO todo (todoItem, todoDateAdded, todoStatus, todoDueBy) 
+    VALUES ("${postBody.todoItem}", "${postBody.todoDateAdded}", "${postBody.todoStatus}", "${postBody.todoDueBy}");
     `)
     return postedTodo
   }catch(e){

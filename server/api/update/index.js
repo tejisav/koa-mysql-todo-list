@@ -8,13 +8,36 @@ app.use(bodyParser())
 
 app.use(async ctx => {
   const updateBody = await ctx.request.body
-  await updateTodo(updateBody.todoItem, updateBody.todoDueBy)
-  ctx.body = { "todoItem": `${updateBody.todoItem}`, "todoDueBy": `${updateBody.todoDueBy}` }
+  await updateTodo(updateBody)
+  ctx.body = JSON.stringify(updateBody)
 })
 
-async function updateTodo(todoItem, todoDueBy) {
+async function updateTodo(updateBody) {
   try {
-    const updatedTodo = await pool.query(`UPDATE todo SET todoDueBy='${todoDueBy}' WHERE todoItem LIKe '%${todoItem}%';`)
+    var addComma = false;
+
+    var query = `UPDATE todo SET `
+    
+    if (updateBody.todoDateAdded) {
+      query += `todoDateAdded='${updateBody.todoDateAdded}'`
+      addComma = true;
+    }
+    if (updateBody.todoStatus) {
+      if (addComma) {
+        query += `, `
+      }
+      query += `todoStatus=${updateBody.todoStatus}`
+      addComma = true;
+    }
+    if (updateBody.todoDueBy) {
+      if (addComma) {
+        query += `, `
+      }
+      query += `todoDueBy='${updateBody.todoDueBy}'`
+      addComma = true;
+    }
+    query += ` WHERE todoItem LIKe '%${updateBody.todoItem}%';`
+    const updatedTodo = await pool.query(query)
     return updatedTodo
   }catch(e){
     console.error(e)
